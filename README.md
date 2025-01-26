@@ -8,26 +8,35 @@ so that children can walk to school without having to cross dangerous busy roads
 
 ## Part 1
 Data: Gowalla locational check ins
+
 A dataset composed of userid's, check in coordinates, and check in times is analysed to predict route choice and travel mode. 
+
 Functions and data pipelines are constructed to smoothly predict and visualize mobility patterns from input data.
 First, the shortest path is plotted between two sequential points, then the travel speed is found through path distance and time elapsed. 
-Travel mode is estimated from travel speed, though this is vulnerable to error as data on when users began their journeys is not available. 
-Finally, daily journeys for single users or the entire userbase are visualized with different colors representing different travel modes.
+
+Travel mode is estimated from travel speed, though this is vulnerable to error as data on when users began their journeys is not available. Pedestrian mode is first assumed and route calculated with the pedestrian street network. If the travel speed is too fast the process is repeated with biking street network, and again with driving street network if the travel speed is still too fast.
+
+Finally, daily journeys are visualized with different colors representing different travel modes.
+
+Example of predicted daily travel for one user. You can see where an incorrect assumption might exist - it seems unlikely that this user walked that long distance along a busy road. It is more likely that they checked in at one place, spent several hours there, and then drove to the next location.
 
 <img width="388" alt="Screenshot 2025-01-26 at 11 21 41 AM" src="https://github.com/user-attachments/assets/5a70690b-d6fd-4dbf-ab29-212cd7437d47" />
 
-Example of daily travel output for one user.
 
 
-<img width="1149" alt="Screenshot 2025-01-26 at 11 23 46 AM" src="https://github.com/user-attachments/assets/39105795-910f-4b26-b6f8-d10b61bc11f9" />
 Predicted walking and cycling journeys vs predicted car journeys for all users.
 
+<img width="1149" alt="Screenshot 2025-01-26 at 11 23 46 AM" src="https://github.com/user-attachments/assets/39105795-910f-4b26-b6f8-d10b61bc11f9" />
+
+
 Though this dataset highlights some potential areas of high pedestrian activity and low car presence, particularly around Mill Road Cemetery,
-this is probably not the best data to make decisions from as it captures only a small and likely biased proportion of Cambridge mobility.
+this is probably not the best data to make decisions from as it captures only a small and likely biased proportion of Cambridge mobility. Also, as previously stated there are likely errors from not knowing departure times. If a dataset labeled with the real travel modes existed it might be interesting to train a model to predict travel mode from the data, but unfortunately I don't have that dataset. 
+
 Let's try another method!
 
 ## Part 2
 Data: Street network graph + land use analysis
+
 This second method of analysis focuses on qualities of the street networks for pedestrians and drivers in order to discover areas which should naturally draw more pedestrians and fewer drivers.
 This is achieved through analysis of centrality measures. 
 Two centrality measures are used here; degree centrality, or how many connections a street has to surrounding streets, 
